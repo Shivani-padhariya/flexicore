@@ -23,7 +23,7 @@ export default function FounderPage() {
               <img src="/founder-portrait.jpg" alt="Founder" className="w-full h-full object-cover" />
             </div>
             <div className="mt-4">
-              <p className="text-lg font-semibold">Arjun Mehta</p>
+              <p className="text-lg font-semibold">JENIL ROJIWADIA</p>
               <p className="text-sm text-muted-foreground">Founder & CEO, Flexicore</p>
             </div>
           </div>

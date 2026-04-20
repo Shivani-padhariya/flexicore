@@ -93,7 +93,7 @@ export function HomeTeamFounder() {
                 </p>
                 <div className="flex items-end justify-between gap-4 pt-2">
                   <div>
-                    <p className="text-xl text-primary font-medium">Ravi Shankar</p>
+                    <p className="text-xl text-primary font-medium">JENIL ROJIWADIA</p>
                     <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground mt-1">
                       Founder and CEO
                     </p>

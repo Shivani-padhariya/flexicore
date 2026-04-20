@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 }
 
 const leadership = [
-  { name: "Arjun Mehta", role: "Founder & CEO", image: "/founder-portrait.jpg" },
+  { name: "JENIL ROJIWADIA", role: "Founder & CEO", image: "/founder-portrait.jpg" },
   { name: "Priya Raman", role: "Chief Design Officer", image: "/executive-portrait.jpg" },
   { name: "Daniel Osei", role: "Head of Global Sales", image: "/executive-portrait-man.jpg" },
   { name: "Maya Fernandes", role: "VP Manufacturing", image: "/executive-portrait-woman.jpg" },
