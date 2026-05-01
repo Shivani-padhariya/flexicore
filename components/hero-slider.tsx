@@ -94,7 +94,7 @@ export function HeroSlider() {
   }, [])
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="relative h-[70vh] w-full overflow-hidden bg-black">
       {/* Slides - Ken Burns zoom + fade */}
       {slides.map((slide, index) => (
         <div
