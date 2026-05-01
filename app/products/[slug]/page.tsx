@@ -14,6 +14,7 @@ import {
   faqSchema,
 } from "@/components/json-ld"
 import { getProduct, getRelatedProducts, products } from "@/lib/products-data"
+import { API_BASE, API_BASE_URL } from "@/lib/admin-auth"
 
 type PageProps = { params: Promise<{ slug: string }> }
 
@@ -21,7 +22,7 @@ const SITE_URL = "https://www.flexicore.com"
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/products`);
+    const res = await fetch(`${API_BASE}/products`);
     const products = await res.json();
     return products.map((p: any) => ({ slug: p.slug }));
   } catch {
@@ -33,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   let p: any;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/products/slug/${slug}`);
+    const res = await fetch(`${API_BASE}/products/slug/${slug}`);
     p = await res.json();
   } catch {
     p = getProduct(slug);
@@ -51,7 +52,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params
   let product: any;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/products/slug/${slug}`);
+    const res = await fetch(`${API_BASE}/products/slug/${slug}`);
     product = await res.json();
     if (product.message) throw new Error();
   } catch {

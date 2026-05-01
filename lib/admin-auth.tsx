@@ -2,11 +2,13 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL
-  ? `${process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')}/api`
-  : 'http://localhost:5000/api';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
+  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')
+  : 'http://localhost:5000';
 
-export { API_BASE };
+const API_BASE = `${API_BASE_URL}/api`;
+
+export { API_BASE, API_BASE_URL };
 
 type User = { id: string; name: string; email: string; role: string };
 type AuthCtx = {
