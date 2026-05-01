@@ -106,8 +106,7 @@ export function HeroSlider() {
         >
           <div
             className={cn(
-              "absolute inset-0 bg-cover bg-center",
-              index === currentSlide && "animate-ken-burns"
+              "absolute inset-0 bg-[size:100%_auto] bg-center bg-no-repeat"
             )}
             style={{ backgroundImage: `url(${slide.image})` }}
           />
