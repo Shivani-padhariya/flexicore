@@ -106,7 +106,7 @@ export function HeroSlider() {
         >
           <div
             className={cn(
-              "absolute inset-0 bg-[size:100%_auto] bg-center bg-no-repeat"
+              "absolute inset-0 bg-cover bg-center bg-no-repeat"
             )}
             style={{ backgroundImage: `url(${slide.image})` }}
           />
