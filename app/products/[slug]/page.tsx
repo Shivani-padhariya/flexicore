@@ -19,7 +19,7 @@ import { fetchFromApi } from "@/lib/api-utils"
 
 type PageProps = { params: Promise<{ slug: string }> }
 
-const SITE_URL = "https://www.flexicore.com"
+const SITE_URL = "https://flexicore-eta.vercel.app"
 
 export async function generateStaticParams() {
   try {
