@@ -1,14 +1,18 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: process.env.MAIL_HOST,
-  port: process.env.MAIL_PORT,
+  host: (process.env.MAIL_HOST || "").replace(/^https?:\/\//, "").replace(/\/$/, ""),
+  port: parseInt(process.env.MAIL_PORT || "465"),
   secure: process.env.MAIL_PORT == 465, // true for 465, false for other ports
   auth: {
     user: process.env.MAIL_USERNAME,
     pass: process.env.MAIL_PASSWORD,
   },
+  debug: true, // Enable debug output
+  logger: true // Log information in console
 });
+
+console.log("Mailer initialized for host:", process.env.MAIL_HOST);
 
 const sendEmail = async ({ to, subject, text, html }) => {
   try {

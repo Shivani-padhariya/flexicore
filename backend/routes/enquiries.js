@@ -10,10 +10,12 @@ router.get("/:id", auth, crud.getOne);
 
 router.post("/", async (req, res) => {
   try {
+    console.log("Received new enquiry submission:", req.body);
     const doc = await Enquiry.create(req.body);
     
     // Send email notification
     try {
+      console.log("Attempting to send email to:", process.env.MAIL_USERNAME);
       await sendEmail({
         to: process.env.MAIL_USERNAME,
         subject: `New Enquiry: ${req.body.subject || 'No Subject'}`,
