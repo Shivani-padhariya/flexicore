@@ -2,12 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL 
-  ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, '')
-  : 'https://flexicore1.onrender.com';
-
-const API_BASE = `${API_BASE_URL}/api`;
-
+import { API_BASE, API_BASE_URL } from './api-config';
 export { API_BASE, API_BASE_URL };
 
 type User = { id: string; name: string; email: string; role: string };

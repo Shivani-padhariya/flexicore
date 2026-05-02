@@ -6,15 +6,16 @@ import { SiteLayout } from "@/components/site-layout"
 import { JsonLd, articleSchema, breadcrumbSchema } from "@/components/json-ld"
 import { blogPosts, getBlogPost } from "@/lib/blog-data"
 import { API_BASE } from "@/lib/admin-auth"
+import { fetchFromApi } from "@/lib/api-utils"
 
 type PageProps = { params: Promise<{ slug: string }> }
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${API_BASE}/blogs`);
-    const posts = await res.json();
+    const posts = await fetchFromApi("/blogs");
     return posts.map((p: any) => ({ slug: p.slug }));
-  } catch {
+  } catch (error) {
+    console.error("Failed to fetch blogs for static params:", error);
     return blogPosts.map((p) => ({ slug: p.slug }));
   }
 }
@@ -23,8 +24,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   let p: any;
   try {
-    const res = await fetch(`${API_BASE}/blogs/slug/${slug}`);
-    p = await res.json();
+    p = await fetchFromApi(`/blogs/slug/${slug}`);
   } catch {
     p = getBlogPost(slug);
   }
@@ -41,9 +41,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
   const { slug } = await params
   let post: any;
   try {
-    const res = await fetch(`${API_BASE}/blogs/slug/${slug}`);
-    post = await res.json();
-    if (post.message) throw new Error();
+    post = await fetchFromApi(`/blogs/slug/${slug}`);
+    if (!post || post.message) throw new Error("Post not found");
   } catch {
     post = getBlogPost(slug);
   }
@@ -52,8 +51,8 @@ export default async function BlogDetailPage({ params }: PageProps) {
 
   let related: any[] = [];
   try {
-    const res = await fetch(`${API_BASE}/blogs`);
-    related = (await res.json()).filter((p: any) => p.slug !== slug).slice(0, 3);
+    const allBlogs = await fetchFromApi("/blogs");
+    related = allBlogs.filter((p: any) => p.slug !== slug).slice(0, 3);
   } catch {
     related = blogPosts.filter((p) => p.slug !== slug).slice(0, 3);
   }

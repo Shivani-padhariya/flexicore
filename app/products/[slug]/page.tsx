@@ -15,6 +15,7 @@ import {
 } from "@/components/json-ld"
 import { getProduct, getRelatedProducts, products } from "@/lib/products-data"
 import { API_BASE, API_BASE_URL } from "@/lib/admin-auth"
+import { fetchFromApi } from "@/lib/api-utils"
 
 type PageProps = { params: Promise<{ slug: string }> }
 
@@ -22,10 +23,10 @@ const SITE_URL = "https://www.flexicore.com"
 
 export async function generateStaticParams() {
   try {
-    const res = await fetch(`${API_BASE}/products`);
-    const products = await res.json();
-    return products.map((p: any) => ({ slug: p.slug }));
-  } catch {
+    const productsFromApi = await fetchFromApi("/products");
+    return productsFromApi.map((p: any) => ({ slug: p.slug }));
+  } catch (error) {
+    console.error("Failed to fetch products for static params:", error);
     return products.map((p) => ({ slug: p.slug }));
   }
 }
@@ -34,8 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params
   let p: any;
   try {
-    const res = await fetch(`${API_BASE}/products/slug/${slug}`);
-    p = await res.json();
+    p = await fetchFromApi(`/products/slug/${slug}`);
   } catch {
     p = getProduct(slug);
   }
@@ -52,9 +52,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
   const { slug } = await params
   let product: any;
   try {
-    const res = await fetch(`${API_BASE}/products/slug/${slug}`);
-    product = await res.json();
-    if (product.message) throw new Error();
+    product = await fetchFromApi(`/products/slug/${slug}`);
+    if (!product || product.message) throw new Error("Product not found");
   } catch {
     product = getProduct(slug);
   }
