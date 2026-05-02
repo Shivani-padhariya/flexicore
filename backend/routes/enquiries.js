@@ -5,6 +5,30 @@ const Enquiry = require("../models/Enquiry");
 const sendEmail = require("../utils/mailer");
 const crud = createCrud(Enquiry);
 
+router.get("/test-email", async (req, res) => {
+  try {
+    console.log("Testing live email configuration...");
+    const info = await sendEmail({
+      to: process.env.MAIL_USERNAME,
+      subject: "Live Server Email Test",
+      html: "<h1>It Works!</h1><p>Your live server is successfully sending emails via Hostinger.</p>"
+    });
+    res.json({ success: true, message: "Email sent successfully", info });
+  } catch (error) {
+    console.error("Live test failed:", error);
+    res.status(500).json({ 
+      success: false, 
+      message: "Email failed to send", 
+      error: error.message,
+      config: {
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        user: process.env.MAIL_USERNAME
+      }
+    });
+  }
+});
+
 router.get("/", auth, crud.getAll);
 router.get("/:id", auth, crud.getOne);
 
