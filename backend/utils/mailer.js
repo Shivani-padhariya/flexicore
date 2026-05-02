@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.hostinger.com",
+  host: "172.65.255.143", // Direct IP of smtp.hostinger.com to force IPv4
   port: 587,
   secure: false,
   requireTLS: true,
