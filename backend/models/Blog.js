@@ -8,6 +8,7 @@ const blogSchema = new mongoose.Schema({
   excerpt: { type: String },
   category: { type: String },
   featuredImage: { url: String, publicId: String },
+  relatedImages: [{ url: String, publicId: String }],
   seoTitle: { type: String },
   metaDescription: { type: String },
   tags: [String],

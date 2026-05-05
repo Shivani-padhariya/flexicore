@@ -12,18 +12,14 @@ type GalleryItem = {
 }
 
 const items: GalleryItem[] = [
-  { src: "/luxury-hotel-lobby.jpg", title: "Rosewood Lobby", category: "Hospitality", location: "Dubai, UAE" },
-  { src: "/modern-kitchen-island.png", title: "Bondi House", category: "Residential", location: "Sydney, AU" },
-  { src: "/spa-interior.jpg", title: "Akasha Spa", category: "Wellness", location: "Bali, ID" },
-  { src: "/airport-counter.jpg", title: "Terminal 3 Check-in", category: "Commercial", location: "Mumbai, IN" },
-  { src: "/modern-office-reception-area.jpg", title: "Fintech HQ Reception", category: "Commercial", location: "London, UK" },
-  { src: "/bathroom-marble-vanity.jpg", title: "Villa d'Argento Bath", category: "Residential", location: "Milan, IT" },
-  { src: "/retail-boutique-interior.jpg", title: "Atelier Flagship", category: "Retail", location: "Paris, FR" },
-  { src: "/healthcare-reception.jpg", title: "Evercare Clinic", category: "Healthcare", location: "Singapore" },
-  { src: "/restaurant-bar-counter.jpg", title: "Noir Speakeasy", category: "Hospitality", location: "Tokyo, JP" },
-  { src: "/modern-apartment-kitchen.png", title: "SoHo Loft", category: "Residential", location: "New York, USA" },
-  { src: "/museum-reception-desk.jpg", title: "National Museum", category: "Public", location: "Delhi, IN" },
-  { src: "/luxury-bathroom.jpg", title: "Penthouse Bathroom", category: "Residential", location: "Hong Kong" },
+  { src: "/gallery/hotel_lobby.png", title: "Rosewood Lobby", category: "Hospitality", location: "Dubai, UAE" },
+  { src: "/gallery/modern_kitchen.png", title: "Bondi House", category: "Residential", location: "Sydney, AU" },
+  { src: "/gallery/spa_interior.png", title: "Akasha Spa", category: "Wellness", location: "Bali, ID" },
+  { src: "/gallery/office_reception.png", title: "Fintech HQ Reception", category: "Commercial", location: "London, UK" },
+  { src: "/gallery/bathroom_vanity.png", title: "Villa d'Argento Bath", category: "Residential", location: "Milan, IT" },
+  { src: "/gallery/retail_boutique.png", title: "Atelier Flagship", category: "Retail", location: "Paris, FR" },
+  { src: "/gallery/hotel_lobby.png", title: "Evercare Clinic", category: "Healthcare", location: "Singapore" },
+  { src: "/gallery/office_reception.png", title: "Noir Speakeasy", category: "Hospitality", location: "Tokyo, JP" },
 ]
 
 const categories = ["All", "Residential", "Hospitality", "Commercial", "Retail", "Healthcare", "Wellness", "Public"]
@@ -42,7 +38,7 @@ export default function GalleryPage() {
       <PageHeader
         title="Gallery"
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Gallery" }]}
-        bgImage="/modern-interior-gallery.jpg"
+        bgImage="/gallery/header.png"
       />
 
       <section className="py-10 md:py-14 px-4 md:px-8">

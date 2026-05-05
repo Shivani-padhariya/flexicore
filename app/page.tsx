@@ -31,7 +31,6 @@ export default function Home() {
         <CategorySection />
         <HomeFactoryJourney />
         <HomeInstagramGrid />
-        <ExportSection />
         <SocialFeeds />
         <TrustedBy />
         <BlogPreview />

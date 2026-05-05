@@ -8,12 +8,12 @@ export const metadata: Metadata = {
 }
 
 const leadership = [
-  { name: "JENIL ROJIWADIA", role: "Founder & CEO", image: "/founder-portrait.jpg" },
-  { name: "Priya Raman", role: "Chief Design Officer", image: "/executive-portrait.jpg" },
-  { name: "Daniel Osei", role: "Head of Global Sales", image: "/executive-portrait-man.jpg" },
-  { name: "Maya Fernandes", role: "VP Manufacturing", image: "/executive-portrait-woman.jpg" },
-  { name: "Ibrahim Saleh", role: "Head of R&D", image: "/scientist-portrait.png" },
-  { name: "Lina Park", role: "Chief Marketing Officer", image: "/marketing-portrait.jpg" },
+  { name: "JENIL ROJIWADIA", role: "Founder & CEO", image: "/founder.png" },
+  { name: "Priya Raman", role: "Chief Design Officer", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=800&q=80" },
+  { name: "Daniel Osei", role: "Head of Global Sales", image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=800&q=80" },
+  { name: "Maya Fernandes", role: "VP Manufacturing", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=800&q=80" },
+  { name: "Ibrahim Saleh", role: "Head of R&D", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=800&q=80" },
+  { name: "Lina Park", role: "Chief Marketing Officer", image: "https://images.unsplash.com/photo-1567532939604-b6b5b0ad2f01?auto=format&fit=crop&w=800&q=80" },
 ]
 
 const teams = [
@@ -30,7 +30,7 @@ export default function TeamPage() {
       <PageHeader
         title="The people behind Flexicore"
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Our Team" }]}
-        bgImage="/diverse-corporate-team.png"
+        bgImage="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80"
       />
 
       <section className="py-16 md:py-24 px-4 md:px-8">

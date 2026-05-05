@@ -1,9 +1,8 @@
 const express = require("express");
+require("dotenv").config();
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-require("dns").setDefaultResultOrder("ipv4first"); // Force IPv4 resolution
-require("dotenv").config();
 
 const app = express();
 
@@ -44,6 +43,7 @@ app.use("/api/careers", require("./routes/careers"));
 app.use("/api/enquiries", require("./routes/enquiries"));
 app.use("/api/settings", require("./routes/settings"));
 app.use("/api/seo", require("./routes/seo"));
+app.use("/api/generate-room", require("./routes/generateRoom"));
 
 app.get("/", (req, res) => res.json({ message: "Flexicore CMS API Running ✅" }));
 

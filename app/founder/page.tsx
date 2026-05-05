@@ -13,14 +13,14 @@ export default function FounderPage() {
       <PageHeader
         title="A message from our founder"
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Our Founder" }]}
-        bgImage="/founder-workshop-portrait.jpg"
+        bgImage="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80"
       />
 
       <section className="py-16 md:py-24 px-4 md:px-8">
         <div className="mx-auto max-w-6xl grid md:grid-cols-[auto_1fr] gap-10 md:gap-16 items-start">
           <div className="w-full md:w-[360px] shrink-0">
             <div className="aspect-[3/4] overflow-hidden bg-secondary">
-              <img src="/founder-portrait.jpg" alt="Founder" className="w-full h-full object-cover" />
+              <img src="/founder.png" alt="Founder" className="w-full h-full object-cover" />
             </div>
             <div className="mt-4">
               <p className="text-lg font-semibold">JENIL ROJIWADIA</p>

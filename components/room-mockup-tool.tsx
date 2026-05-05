@@ -32,36 +32,82 @@ const STYLES = [
 
 export function RoomMockupTool() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null)
+  const [imageFile, setImageFile] = useState<File | null>(null)
   const [selectedSurface, setSelectedSurface] = useState(products[0].slug)
   const [roomType, setRoomType] = useState(ROOM_TYPES[0])
   const [style, setStyle] = useState(STYLES[0])
   const [prompt, setPrompt] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<string | null>(null)
+  const [showBefore, setShowBefore] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+    setImageFile(file)
     const reader = new FileReader()
     reader.onload = (ev) => setUploadedImage(ev.target?.result as string)
     reader.readAsDataURL(file)
     setResult(null)
   }
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
+    if (!imageFile) {
+      alert("Please upload a room photo first.")
+      return
+    }
+
     setIsGenerating(true)
-    setResult(null)
-    // UI-only mock: simulate AI generation with the selected surface image
-    setTimeout(() => {
-      const surface = products.find((p) => p.slug === selectedSurface)
-      setResult(surface?.image || uploadedImage)
+    setShowBefore(false)
+    // Clear result to force UI update and show loader
+    setResult(null) 
+
+    try {
+      console.log("Starting AI generation with:", {
+        surface: selectedSurface,
+        roomType,
+        style,
+        description: prompt
+      })
+
+      const formData = new FormData()
+      formData.append("image", imageFile)
+      formData.append("surface", selectedSurface)
+      formData.append("roomType", roomType)
+      formData.append("style", style)
+      formData.append("description", prompt)
+
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"
+      const response = await fetch(`${apiUrl}/api/generate-room`, {
+        method: "POST",
+        body: formData,
+      })
+
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`)
+      }
+
+      const data = await response.json()
+      console.log("AI generation response:", data)
+
+      if (data.success) {
+        // Add cache-buster to force image refresh if URL is same
+        setResult(`${data.generatedImageUrl}${data.generatedImageUrl.includes('?') ? '&' : '?'}t=${Date.now()}`)
+      } else {
+        alert(data.message || "Failed to generate mockup. Please try again.")
+      }
+    } catch (error) {
+      console.error("Generation error:", error)
+      alert("An error occurred during generation. Please make sure the backend server is running on port 5001.")
+    } finally {
       setIsGenerating(false)
-    }, 2200)
+    }
   }
 
   const handleReset = () => {
     setUploadedImage(null)
+    setImageFile(null)
     setResult(null)
     setPrompt("")
   }
@@ -216,14 +262,25 @@ export function RoomMockupTool() {
             AI-Generated Preview
           </h3>
           {result && (
-            <a
-              href={result}
-              download="flexicore-mockup.jpg"
-              className="flex items-center gap-2 text-sm text-primary hover:underline"
-            >
-              <Download className="w-4 h-4" />
-              Download
-            </a>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={handleGenerate}
+                className="flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <RotateCcw className="w-4 h-4" />
+                Regenerate
+              </button>
+              <a
+                href={result}
+                target="_blank"
+                rel="noopener noreferrer"
+                download="flexicore-mockup.png"
+                className="flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <Download className="w-4 h-4" />
+                Download
+              </a>
+            </div>
           )}
         </div>
 
@@ -244,11 +301,26 @@ export function RoomMockupTool() {
           )}
 
           {result ? (
-            <img
-              src={result || "/placeholder.svg"}
-              alt="AI room mockup"
-              className="w-full h-full object-cover"
-            />
+            <div className="relative w-full h-full">
+              <img
+                src={(showBefore ? uploadedImage : result) || "/placeholder.svg"}
+                alt={showBefore ? "Original room" : "AI room mockup"}
+                className="w-full h-full object-cover"
+              />
+              <button
+                onMouseDown={() => setShowBefore(true)}
+                onMouseUp={() => setShowBefore(false)}
+                onMouseLeave={() => setShowBefore(false)}
+                className="absolute bottom-4 left-4 bg-black/60 text-white text-[10px] uppercase tracking-widest px-3 py-2 rounded-full backdrop-blur-md hover:bg-black/80 transition-colors"
+              >
+                Hold to see Before
+              </button>
+              {showBefore && (
+                <div className="absolute top-4 left-4 bg-primary text-white text-[10px] uppercase tracking-widest px-3 py-1 rounded-full">
+                  Original
+                </div>
+              )}
+            </div>
           ) : !isGenerating ? (
             <div className="flex flex-col items-center text-muted-foreground gap-3 p-6 text-center">
               <ImageIcon className="w-12 h-12" />

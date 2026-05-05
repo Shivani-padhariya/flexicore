@@ -48,7 +48,7 @@ export default function AboutPage() {
       <PageHeader
         title="Crafting surfaces that inspire"
         breadcrumb={[{ label: "Home", href: "/" }, { label: "About Us" }]}
-        bgImage="/flexicore-factory-exterior.jpg"
+        bgImage="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=80"
       />
 
       {/* Intro */}
@@ -87,7 +87,7 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="aspect-[4/5] bg-secondary overflow-hidden">
-            <img src="/flexicore-design-team-working.jpg" alt="Flexicore team" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80" alt="Flexicore team" className="w-full h-full object-cover" />
           </div>
         </div>
       </section>
@@ -116,10 +116,10 @@ export default function AboutPage() {
       <section className="py-16 px-4 md:px-8">
         <div className="mx-auto max-w-6xl grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { value: "25+", label: "Years of craft" },
-            { value: "45", label: "Countries served" },
-            { value: "180+", label: "Colors & finishes" },
-            { value: "12k+", label: "Projects delivered" },
+            { value: "5+", label: "Years of craft" },
+            { value: "5+", label: "Countries served" },
+            { value: "20+", label: "Colors & finishes" },
+            { value: "1k+", label: "Projects delivered" },
           ].map((s) => (
             <div key={s.label} className="text-center">
               <div className="text-4xl md:text-5xl font-light text-primary">{s.value}</div>

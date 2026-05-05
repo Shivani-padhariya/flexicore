@@ -8,11 +8,11 @@ export const metadata: Metadata = {
 }
 
 const events = [
-  { name: "IndiaWood 2026", dates: "2026-05-18 / 2026-05-22", city: "Bangalore, India", booth: "Hall 2, Stand B-24", image: "/trade-show-booth.jpg", status: "upcoming" },
-  { name: "Milan Design Week", dates: "2026-04-15 / 2026-04-21", city: "Milan, Italy", booth: "Tortona District", image: "/milan-design-week.jpg", status: "upcoming" },
-  { name: "Dubai Design Week", dates: "2026-11-03 / 2026-11-08", city: "Dubai, UAE", booth: "Downtown Design", image: "/dubai-design-week.jpg", status: "upcoming" },
-  { name: "KBIS 2026", dates: "2026-02-25 / 2026-02-27", city: "Las Vegas, USA", booth: "W1145", image: "/kitchen-bath-show-floor.jpg", status: "past" },
-  { name: "Interior Lifestyle Tokyo", dates: "2025-11-12 / 2025-11-14", city: "Tokyo, Japan", booth: "East Hall 4", image: "/tokyo-design-show.jpg", status: "past" },
+  { name: "IndiaWood 2026", dates: "2026-05-18 / 2026-05-22", city: "Bangalore, India", booth: "Hall 2, Stand B-24", image: "/expo/trade_show_booth.png", status: "upcoming" },
+  { name: "Milan Design Week", dates: "2026-04-15 / 2026-04-21", city: "Milan, Italy", booth: "Tortona District", image: "/expo/milan_design_week.png", status: "upcoming" },
+  { name: "Dubai Design Week", dates: "2026-11-03 / 2026-11-08", city: "Dubai, UAE", booth: "Downtown Design", image: "/expo/dubai_design_week.png", status: "upcoming" },
+  { name: "KBIS 2026", dates: "2026-02-25 / 2026-02-27", city: "Las Vegas, USA", booth: "W1145", image: "/expo/trade_show_booth.png", status: "past" },
+  { name: "Interior Lifestyle Tokyo", dates: "2025-11-12 / 2025-11-14", city: "Tokyo, Japan", booth: "East Hall 4", image: "/expo/milan_design_week.png", status: "past" },
 ]
 
 export default function ExpoPage() {
@@ -24,7 +24,7 @@ export default function ExpoPage() {
       <PageHeader
         title="Meet us at our next event"
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Expo" }]}
-        bgImage="/design-exhibition-hall.jpg"
+        bgImage="/expo/header.png"
       />
 
       <section className="py-16 px-4 md:px-8">

@@ -105,7 +105,21 @@ export default async function BlogDetailPage({ params }: PageProps) {
         <div className="mx-auto max-w-3xl py-12 md:py-16 prose prose-neutral max-w-none">
           <p className="text-lg md:text-xl leading-relaxed text-foreground/80">{post.excerpt}</p>
           <div className="mt-6 leading-relaxed text-foreground/80" dangerouslySetInnerHTML={{ __html: post.content || post.body }} />
-          <p className="mt-6 leading-relaxed text-foreground/80">
+          
+          {post.relatedImages?.length > 0 && (
+            <div className="mt-12 pt-12 border-t border-border">
+              <h3 className="text-xl font-light mb-6">Gallery</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {post.relatedImages.map((img: any, i: number) => (
+                  <div key={i} className="aspect-video overflow-hidden bg-secondary rounded-lg">
+                    <img src={img.url} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <p className="mt-12 leading-relaxed text-foreground/80">
             If you&apos;d like to learn more about this topic, reach out to our team. We love talking shop with
             architects, designers, and fabricators pushing the boundary of what&apos;s possible with solid surface.
           </p>

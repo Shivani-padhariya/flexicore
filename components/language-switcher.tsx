@@ -19,7 +19,7 @@ export function LanguageSwitcher({ dark = false }: { dark?: boolean }) {
       <button
         onClick={() => setOpen(!open)}
         className={`flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide transition-colors ${
-          dark ? "text-white/80 hover:text-white" : "text-foreground/70 hover:text-primary"
+          dark ? "text-white hover:text-white" : "text-white hover:text-white"
         }`}
         aria-label="Change language"
       >

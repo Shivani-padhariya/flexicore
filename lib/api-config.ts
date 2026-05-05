@@ -7,8 +7,8 @@ const getApiBaseUrl = () => {
 
   // 2. Fallback to production if not set
   if (!url) {
-    // url = 'https://flexicore1.onrender.com';
-    url = 'http://localhost:5001';
+    url = 'https://flexicore1.onrender.com';
+    // url = 'http://localhost:5001';
   }
 
   // 3. Remove trailing slash

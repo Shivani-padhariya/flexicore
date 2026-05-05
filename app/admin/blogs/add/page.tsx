@@ -21,6 +21,9 @@ export default function BlogFormPage() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [existingImage, setExistingImage] = useState<any>(null);
   const [previewUrl, setPreviewUrl] = useState('');
+  
+  const [relatedFiles, setRelatedFiles] = useState<File[]>([]);
+  const [existingRelated, setExistingRelated] = useState<any[]>([]);
 
   useEffect(() => {
     if (id) {
@@ -32,6 +35,7 @@ export default function BlogFormPage() {
             tags: b.tags?.join(', ') || '', author: b.author || '', isPublished: b.isPublished,
           });
           setExistingImage(b.featuredImage || null);
+          setExistingRelated(b.relatedImages || []);
         })
         .catch(err => setMsg(err.message))
         .finally(() => setLoading(false));
@@ -53,10 +57,15 @@ export default function BlogFormPage() {
     try {
       let featuredImage = existingImage;
       if (imageFile) featuredImage = await uploadFile(imageFile);
+      
+      const uploadedRelated = await Promise.all(relatedFiles.map(file => uploadFile(file)));
+      const relatedImages = [...existingRelated, ...uploadedRelated];
+
       const body = {
         ...form,
         tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
         featuredImage,
+        relatedImages,
       };
       if (id) {
         await apiRequest(`/blogs/${id}`, { method: 'PUT', body: JSON.stringify(body) });
@@ -144,6 +153,36 @@ export default function BlogFormPage() {
                 <textarea className={`${inputCls} resize-none`} style={inputStyle} rows={3}
                   value={form.excerpt} onChange={e => setForm({ ...form, excerpt: e.target.value })}
                   placeholder="Short summary shown in blog listing..." />
+              </div>
+
+              {/* Related Images */}
+              <div className="pt-4 border-t border-gray-100">
+                <label className={labelCls} style={labelStyle}>Related Images (Optional)</label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-3">
+                  {existingRelated.map((img, idx) => (
+                    <div key={idx} className="relative aspect-video rounded-xl overflow-hidden group border border-gray-100">
+                      <img src={img.url} className="w-full h-full object-cover" alt="" />
+                      <button type="button" onClick={() => setExistingRelated(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                  {relatedFiles.map((file, idx) => (
+                    <div key={idx} className="relative aspect-video rounded-xl overflow-hidden border-2 border-amber-200">
+                      <img src={URL.createObjectURL(file)} className="w-full h-full object-cover" alt="" />
+                      <button type="button" onClick={() => setRelatedFiles(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-0.5">
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                <input type="file" accept="image/*" multiple className="text-sm"
+                  onChange={e => {
+                    const files = Array.from(e.target.files || []);
+                    setRelatedFiles(prev => [...prev, ...files]);
+                  }} />
               </div>
             </div>
           </div>
