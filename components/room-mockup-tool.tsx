@@ -11,10 +11,12 @@ import {
   Wand2,
 } from "lucide-react"
 import { products } from "@/lib/products-data"
+import { API_BASE } from "@/lib/api-config"
 
 const ROOM_TYPES = [
   "Kitchen",
   "Bathroom",
+  "Bedroom",
   "Living Room",
   "Reception / Lobby",
   "Retail Counter",
@@ -61,7 +63,7 @@ export function RoomMockupTool() {
     setIsGenerating(true)
     setShowBefore(false)
     // Clear result to force UI update and show loader
-    setResult(null) 
+    setResult(null)
 
     try {
       console.log("Starting AI generation with:", {
@@ -78,14 +80,14 @@ export function RoomMockupTool() {
       formData.append("style", style)
       formData.append("description", prompt)
 
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001"
-      const response = await fetch(`${apiUrl}/api/generate-room`, {
+      const response = await fetch(`${API_BASE}/generate-room`, {
         method: "POST",
         body: formData,
       })
 
       if (!response.ok) {
-        throw new Error(`Server responded with ${response.status}`)
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server responded with ${response.status}`);
       }
 
       const data = await response.json()
@@ -97,9 +99,9 @@ export function RoomMockupTool() {
       } else {
         alert(data.message || "Failed to generate mockup. Please try again.")
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Generation error:", error)
-      alert("An error occurred during generation. Please make sure the backend server is running on port 5001.")
+      alert(`Generation Error: ${error.message}`);
     } finally {
       setIsGenerating(false)
     }
@@ -160,11 +162,10 @@ export function RoomMockupTool() {
                 key={p.slug}
                 type="button"
                 onClick={() => setSelectedSurface(p.slug)}
-                className={`aspect-square rounded-sm overflow-hidden border-2 transition-all ${
-                  selectedSurface === p.slug
+                className={`aspect-square rounded-sm overflow-hidden border-2 transition-all ${selectedSurface === p.slug
                     ? "border-primary ring-2 ring-primary/20"
                     : "border-transparent hover:border-border"
-                }`}
+                  }`}
                 title={p.name}
               >
                 <img
@@ -305,7 +306,7 @@ export function RoomMockupTool() {
               <img
                 src={(showBefore ? uploadedImage : result) || "/placeholder.svg"}
                 alt={showBefore ? "Original room" : "AI room mockup"}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain bg-black/5"
               />
               <button
                 onMouseDown={() => setShowBefore(true)}

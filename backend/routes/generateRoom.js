@@ -35,37 +35,93 @@ router.post("/", (req, res) => {
       // 1. Prepare the prompt
       const prompt = `Transform this room image into a ${style} ${roomType} with ${surface} surfaces. Description: ${description}. Keep layout similar but enhance design, lighting, textures, and realism. Ultra-realistic, 8k, interior design photography.`;
 
-      // 2. Call Stability AI Image-to-Image API
-      // Note: This is a conceptual implementation of Stability AI SDK/API call
-      // You might need to adjust based on their latest API version (e.g. SDXL)
+      // 2. Fetch the uploaded image from Cloudinary
+      console.log("Fetching image from Cloudinary:", req.file.path);
+      const imageResponse = await axios.get(req.file.path, { responseType: 'arraybuffer' });
+      const imageBuffer = Buffer.from(imageResponse.data);
+
+      // Simple manual dimension detection for JPG/PNG to pick best SDXL size
+      let width = 1024, height = 1024; // Default to square
+      try {
+        if (imageBuffer[0] === 0xFF && imageBuffer[1] === 0xD8) { // JPEG
+          let offset = 2;
+          while (offset < imageBuffer.length) {
+            const marker = imageBuffer.readUInt16BE(offset);
+            const length = imageBuffer.readUInt16BE(offset + 2);
+            if (marker === 0xFFC0 || marker === 0xFFC2) {
+              height = imageBuffer.readUInt16BE(offset + 5);
+              width = imageBuffer.readUInt16BE(offset + 7);
+              break;
+            }
+            offset += length + 2;
+          }
+        } else if (imageBuffer[0] === 0x89 && imageBuffer[1] === 0x50) { // PNG
+          width = imageBuffer.readUInt32BE(16);
+          height = imageBuffer.readUInt32BE(12 + 8);
+        }
+      } catch (e) { console.warn("Could not detect dimensions, using default square."); }
+
+      // Choose best SDXL dimensions based on detected aspect ratio
+      const isLandscape = width > height;
+      const targetW = isLandscape ? 1344 : 768;
+      const targetH = isLandscape ? 768 : 1344;
       
+      console.log(`Detected: ${width}x${height}. Target: ${targetW}x${targetH}`);
+
+      // Re-fetch with exact Cloudinary dimensions to avoid Stability AI dimension error
+      const transformedUrl = req.file.path.replace("/upload/", `/upload/w_${targetW},h_${targetH},c_fill/`);
+      const finalImageResponse = await axios.get(transformedUrl, { responseType: 'arraybuffer' });
+      const finalImageBuffer = Buffer.from(finalImageResponse.data);
+
+      // 3. Call Stability AI Image-to-Image API using FormData
+      const formData = new FormData();
+      formData.append("init_image", finalImageBuffer, {
+        filename: "init_image.png",
+        contentType: req.file.mimetype,
+      });
+      
+      // Highly emphasized prompt to ensure furniture and style are applied
+      const finalPrompt = `A professional interior design photo of a ${style} ${roomType}. ${description}. The floor is ${surface}. High-end furniture, realistic lighting, highly detailed, 8k resolution, cinematic lighting, wide angle view.`;
+      
+      formData.append("text_prompts[0][text]", finalPrompt);
+      formData.append("text_prompts[0][weight]", 1);
+      
+      // Strong negative prompt to avoid empty rooms or poor quality
+      const negativePrompt = "empty room, bare walls, low quality, blurry, distorted, messy, cluttered, dark, gloomy, monochrome, cropped, zoomed in";
+      formData.append("text_prompts[1][text]", negativePrompt);
+      formData.append("text_prompts[1][weight]", -1);
+      
+      formData.append("cfg_scale", 9); // Higher adherence to prompt (7-10 is good)
+      formData.append("samples", 1);
+      formData.append("steps", 40); 
+      formData.append("init_image_mode", "IMAGE_STRENGTH");
+      formData.append("image_strength", 0.32); // Lower strength allows more furniture to be added
+
+      console.log(`Calling Stability AI API (SDXL 1.0) with ${targetW}x${targetH}...`);
       const response = await axios.post(
         "https://api.stability.ai/v1/generation/stable-diffusion-xl-1024-v1-0/image-to-image",
-        {
-          text_prompts: [
-            { text: prompt, weight: 1 },
-            { text: "blurry, distorted, low quality, bad anatomy", weight: -1 }
-          ],
-          cfg_scale: 7,
-          clip_guidance_preset: "FAST_BLUE",
-          height: 1024,
-          width: 1024,
-          samples: 1,
-          steps: 30,
-          init_image: req.file.path // Some APIs allow URL, some require buffer
-        },
+        formData,
         {
           headers: {
-            "Content-Type": "application/json",
+            ...formData.getHeaders(),
             Accept: "application/json",
             Authorization: `Bearer ${STABILITY_API_KEY}`,
           },
+          validateStatus: false,
         }
       );
 
-      // 3. Process response and upload to Cloudinary
-      // (Stability AI returns base64 or binary)
+      if (response.status !== 200) {
+        throw new Error(`Stability AI Error (${response.status}): ${JSON.stringify(response.data)}`);
+      }
+
+      // 4. Process response and upload to Cloudinary
+      if (!response.data.artifacts || response.data.artifacts.length === 0) {
+        throw new Error("Stability AI returned no image artifacts.");
+      }
+
       const generatedBase64 = response.data.artifacts[0].base64;
+      console.log("Uploading generated image to Cloudinary...");
       const uploadRes = await cloudinary.uploader.upload(`data:image/png;base64,${generatedBase64}`, {
         folder: "flexicore/generated-rooms",
       });
@@ -76,10 +132,18 @@ router.post("/", (req, res) => {
       });
 
     } catch (error) {
-      console.error("❌ AI Generation Error:", error.response?.data || error.message);
+      console.error("❌ AI Generation Error Details:", error.message);
+      
+      let clientMessage = "Failed to generate room image.";
+      if (error.message.includes("Stability AI Error")) {
+        clientMessage = error.message; // Pass through the specific API error
+      } else if (error.code === 'ECONNREFUSED') {
+        clientMessage = "Could not connect to AI service. Please check your internet.";
+      }
+
       res.status(500).json({
         success: false,
-        message: "Failed to generate room image. Please check API keys and configuration.",
+        message: clientMessage,
         error: error.message
       });
     }
