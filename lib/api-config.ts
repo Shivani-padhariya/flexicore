@@ -5,10 +5,13 @@ const getApiBaseUrl = () => {
   // 1. Check for the environment variable
   let url = process.env.NEXT_PUBLIC_API_URL;
 
-  // 2. Fallback to production if not set
+  // 2. Dynamic fallback based on window location
   if (!url) {
-    // url = 'https://flexicore1.onrender.com';
-     url = 'http://localhost:5001';
+    if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+      url = 'https://flexicore1.onrender.com';
+    } else {
+      url = 'http://localhost:5001';
+    }
   }
 
   // 3. Remove trailing slash
