@@ -163,8 +163,8 @@ export function RoomMockupTool() {
                 type="button"
                 onClick={() => setSelectedSurface(p.slug)}
                 className={`aspect-square rounded-sm overflow-hidden border-2 transition-all ${selectedSurface === p.slug
-                    ? "border-primary ring-2 ring-primary/20"
-                    : "border-transparent hover:border-border"
+                  ? "border-primary ring-2 ring-primary/20"
+                  : "border-transparent hover:border-border"
                   }`}
                 title={p.name}
               >
@@ -336,3 +336,5 @@ export function RoomMockupTool() {
     </div>
   )
 }
+
+//testing
