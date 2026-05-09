@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState, Suspense } from "react"
 import Link from "next/link"
+import { useSearchParams, useRouter } from "next/navigation"
+
 import {
   Search,
   Leaf,
@@ -24,7 +26,11 @@ import { apiRequest } from "@/lib/admin-auth"
 const hues = ["All", "White", "Beige", "Black", "Burgundy", "Copper", "Cream", "Charcoal"]
 const regions = ["All", "Global", "Europe", "Middle East", "Asia"]
 
-export default function ProductsPage() {
+function ProductsContent() {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const categoryParam = searchParams.get("category")
+
   const [products, setProducts] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>(staticCategories)
   const [loading, setLoading] = useState(true)
@@ -43,6 +49,15 @@ export default function ProductsPage() {
 
   const [query, setQuery] = useState("")
   const [cat, setCat] = useState<ProductCategory | "all">("all")
+
+  useEffect(() => {
+    if (categoryParam) {
+      setCat(categoryParam as ProductCategory | "all")
+    } else {
+      setCat("all")
+    }
+  }, [categoryParam])
+
   const [industry, setIndustry] = useState<Industry | "all">("all")
   const [hue, setHue] = useState("All")
   const [region, setRegion] = useState("All")
@@ -244,6 +259,7 @@ export default function ProductsPage() {
                   setIndustry("all")
                   setHue("All")
                   setRegion("All")
+                  router.push('/products', { scroll: false })
                 }}
                 className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary"
               >
@@ -260,7 +276,10 @@ export default function ProductsPage() {
             {categories.map((c) => (
               <button
                 key={c.id}
-                onClick={() => setCat(c.id as ProductCategory | "all")}
+                onClick={() => {
+                  setCat(c.id as ProductCategory | "all")
+                  router.push(`/products${c.id === 'all' ? '' : `?category=${c.id}`}`, { scroll: false })
+                }}
                 className={`px-5 py-2 text-sm font-medium transition-colors duration-250 ${
                   cat === c.id
                     ? "bg-primary text-primary-foreground"
@@ -289,12 +308,13 @@ export default function ProductsPage() {
               <p className="text-muted-foreground">No products match your filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-0.5">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {filtered.map((p) => (
                 <Link
                   key={p.slug}
                   href={`/products/${p.slug}`}
-                  className="relative aspect-square group overflow-hidden bg-secondary transition-transform duration-250 hover:-translate-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+                  style={{ aspectRatio: '2/3' }}
+                  className="relative group overflow-hidden bg-secondary rounded-md transition-transform duration-250 hover:-translate-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
                 >
                   <img
                     src={p.images?.[0]?.url || p.image || "/placeholder.svg"}
@@ -329,5 +349,17 @@ export default function ProductsPage() {
         </div>
       </section>
     </SiteLayout>
+  )
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    }>
+      <ProductsContent />
+    </Suspense>
   )
 }

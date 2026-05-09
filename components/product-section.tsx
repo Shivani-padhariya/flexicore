@@ -117,12 +117,13 @@ export function ProductSection() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {filteredProducts.map((product) => (
             <a
               key={product.slug || product._id}
               href={`/products/${product.slug}`}
-              className="group relative aspect-square overflow-hidden bg-muted transition-transform duration-250 hover:-translate-y-1.5"
+              style={{ aspectRatio: '2/3' }}
+              className="group relative overflow-hidden bg-muted rounded-md transition-transform duration-250 hover:-translate-y-1.5"
             >
               {/* Product Image */}
               <div
