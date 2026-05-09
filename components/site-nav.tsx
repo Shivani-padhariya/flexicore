@@ -276,6 +276,7 @@ export function SiteNav() {
           <div className="flex items-center gap-2 md:gap-3 shrink-0">
             <button
               onClick={() => setSearchOpen((v) => !v)}
+              suppressHydrationWarning
               className="p-2 text-foreground/70 hover:text-primary transition-colors"
               aria-label="Search"
             >
@@ -326,6 +327,7 @@ export function SiteNav() {
               autoFocus={searchOpen}
               type="text"
               placeholder="Search products, colors, articles..."
+              suppressHydrationWarning
               className="flex-1 bg-transparent outline-none text-sm placeholder:text-muted-foreground"
             />
             <button

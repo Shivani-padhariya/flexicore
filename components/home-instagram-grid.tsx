@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import { Instagram } from "lucide-react"
 
 /**
@@ -36,20 +35,8 @@ const instagramPosts = [
 ]
 
 export function HomeInstagramGrid() {
-  useEffect(() => {
-    // Load Instagram embed script
-    const script = document.createElement("script")
-    script.src = "//www.instagram.com/embed.js"
-    script.async = true
-    document.body.appendChild(script)
-
-    return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script)
-      }
-    }
-  }, [])
-
+  // No script needed for direct iframe embeds with /embed/ suffix
+  // The official embed.js is for blockquote elements
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container mx-auto px-4">
@@ -75,23 +62,32 @@ export function HomeInstagramGrid() {
         </div>
 
         {/* 3x2 Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
           {instagramPosts.map((post) => (
             <div
               key={post.id}
-              className="instagram-embed-container overflow-hidden rounded-xl"
-              style={{ height: "600px" }}
+              className="instagram-embed-container relative aspect-[4/5] md:aspect-square overflow-hidden rounded-xl bg-muted/30 group touch-pan-y shadow-sm"
             >
+              {/* Overlay that allows click-through but prioritizes page scroll on touch */}
+              <div className="absolute inset-0 z-10 pointer-events-none" />
+              
               <iframe
                 src={`${post.url}embed/`}
                 width="100%"
-                height="600"
+                height="100%"
                 frameBorder="0"
                 scrolling="no"
                 allow="encrypted-media"
+                loading="lazy"
                 title={`Instagram post ${post.id}`}
-                className="rounded-xl w-full h-full"
-                style={{ minHeight: "600px", display: "block" }}
+                className="relative z-0 w-full h-full border-none transition-opacity duration-700 opacity-0"
+                onLoad={(e) => {
+                  (e.target as HTMLIFrameElement).style.opacity = "1";
+                }}
+                style={{ 
+                  display: "block",
+                  overflow: "hidden"
+                }}
               />
             </div>
           ))}

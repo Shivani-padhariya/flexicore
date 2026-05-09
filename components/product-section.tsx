@@ -67,6 +67,7 @@ export function ProductSection() {
               placeholder="Enter color name here"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              suppressHydrationWarning
               className="w-full pl-12 pr-12 py-3 border border-border rounded-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary bg-background"
             />
             <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -76,6 +77,7 @@ export function ProductSection() {
           <div className="flex items-center gap-6">
             <button
               onClick={() => setIsRegionOpen(!isRegionOpen)}
+              suppressHydrationWarning
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
             >
               <Globe className="w-5 h-5" />
@@ -83,6 +85,7 @@ export function ProductSection() {
             </button>
             <button
               onClick={() => setIsHueOpen(!isHueOpen)}
+              suppressHydrationWarning
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
             >
               <Droplet className="w-5 h-5" />
@@ -90,6 +93,7 @@ export function ProductSection() {
             </button>
             <button
               onClick={() => setIsFilterOpen(!isFilterOpen)}
+              suppressHydrationWarning
               className="flex items-center gap-2 text-foreground hover:text-primary transition-colors"
             >
               <SlidersHorizontal className="w-5 h-5" />
@@ -104,6 +108,7 @@ export function ProductSection() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
+              suppressHydrationWarning
               className={cn(
                 "px-6 py-2 text-sm font-medium transition-colors rounded-sm",
                 selectedCategory === category

@@ -57,7 +57,7 @@ export default function RootLayout({
       <head>
         <JsonLd data={organizationSchema} />
       </head>
-      <body className={`${poppins.variable} font-sans antialiased`}>
+      <body className={`${poppins.variable} font-sans antialiased`} suppressHydrationWarning>
         <I18nProvider>
           <SmoothScrollProvider>{children}</SmoothScrollProvider>
           <CookieConsent />
