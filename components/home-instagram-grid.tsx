@@ -80,6 +80,7 @@ export function HomeInstagramGrid() {
                 allow="encrypted-media"
                 loading="lazy"
                 title={`Instagram post ${post.id}`}
+                suppressHydrationWarning
                 className="relative z-0 w-full h-full border-none transition-opacity duration-700 opacity-0"
                 onLoad={(e) => {
                   (e.target as HTMLIFrameElement).style.opacity = "1";

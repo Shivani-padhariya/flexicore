@@ -146,6 +146,7 @@ export function SocialFeeds() {
             <button
               key={p.id}
               type="button"
+              suppressHydrationWarning
               onClick={() => setActive(p.id)}
               className={`flex items-center gap-2 h-10 px-5 rounded-full text-sm font-medium transition-all border ${
                 active === p.id
@@ -165,6 +166,7 @@ export function SocialFeeds() {
             <a
               key={post.id}
               href="#"
+              suppressHydrationWarning
               className="group relative aspect-square overflow-hidden rounded-sm bg-muted transition-transform duration-250 hover:-translate-y-1.5 hover:shadow-lg"
             >
               <img
@@ -219,6 +221,7 @@ export function SocialFeeds() {
                 key={p}
                 href="#"
                 aria-label={p}
+                suppressHydrationWarning
                 className={`w-11 h-11 rounded-full flex items-center justify-center text-white ${BRAND_COLORS[p]} hover:scale-110 transition-transform`}
               >
                 {p === "instagram" && <Instagram className="w-5 h-5" />}
