@@ -67,7 +67,7 @@ export function ProductGalleryTabs({ product }: { product: Product }) {
       </div>
 
       {/* Viewer */}
-      <div className="relative aspect-[3/2] bg-secondary max-w-[25%] mx-auto">
+      <div className="relative aspect-[3/2] bg-secondary max-w-[450px] mx-auto">
         {tab === "image" && (
           <ImageMagnifier src={gallery[active]} alt={product.name} className="w-full h-full" />
         )}
